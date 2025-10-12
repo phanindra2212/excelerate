@@ -1,4 +1,5 @@
-Minimalist Budget Tracker
+#Minimalist Budget Tracker
+
 A fast, clutter-free mobile application built with Flutter for effortless personal finance logging and tracking.
 
 🌟 Project Vision
