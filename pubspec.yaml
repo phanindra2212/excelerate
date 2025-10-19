@@ -1,19 +1,27 @@
+# The minimal pubspec.yaml file needed to run the current Dart code.
 name: minimalist_budget_tracker
-description: "A new Flutter project."
-publish_to: 'none'
-version: 0.1.0
+description: A minimalist budget planner built in Flutter.
+
+version: 1.0.0+1
 
 environment:
-  sdk: ^3.9.2
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  
+  # State Management for data flow (required by your code)
+  provider: ^6.1.1
+
+  # Charting library used in ReportsScreen (required by your code)
+  fl_chart: ^0.68.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^3.0.0
 
+# The following section is specific to Flutter.
 flutter:
   uses-material-design: true
