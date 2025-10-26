@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "title": "Rythu Bazar Vegetables",
+    "description": "Weekly grocery shopping at local market",
+    "amount": 550.00,
+    "date": "2025-10-25T14:30:00.000",
+    "isExpense": true,
+    "category": "Groceries"
+  },
+  {
+    "id": "2",
+    "title": "Salary Deposit (IT Firm)",
+    "description": "Monthly salary credit from employer",
+    "amount": 75000.00,
+    "date": "2025-10-24T09:00:00.000",
+    "isExpense": false,
+    "category": "Income"
+  },
+  {
+    "id": "3",
+    "title": "RTC Bus Ticket",
+    "description": "Commute to office by state bus",
+    "amount": 80.00,
+    "date": "2025-10-26T04:15:00.000",
+    "isExpense": true,
+    "category": "Transport"
+  },
+  {
+    "id": "4",
+    "title": "APSPDCL Electricity Bill",
+    "description": "Monthly electricity bill payment",
+    "amount": 1200.00,
+    "date": "2025-10-19T11:00:00.000",
+    "isExpense": true,
+    "category": "Bills"
+  },
+  {
+    "id": "5",
+    "title": "Online Shopping (Flipkart)",
+    "description": "New shirt and trousers",
+    "amount": 1499.00,
+    "date": "2025-10-23T18:00:00.000",
+    "isExpense": true,
+    "category": "Shopping"
+  }
+]

@@ -40,13 +40,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // GlobalKey for Form validation
+  final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
+
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
   void _handleLogin() {
-    if (_userIdController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty) {
+    // 1. Validate the form inputs
+    if (_loginFormKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Login successful! Navigating to main app...'),
@@ -59,8 +62,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } else {
+      // Validation failed, errors are shown by the TextFormField widgets
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter User ID and Password.')),
+        const SnackBar(content: Text('Please correct the errors above.')),
       );
     }
   }
@@ -136,73 +140,95 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildLoginForm() {
-    return Container(
-      padding: const EdgeInsets.all(24.0),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.95),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            controller: _userIdController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: minimalistInputDecoration(
-              label: 'User ID / Email',
-              icon: Icons.person_outline,
+    // Wrap the form inputs in a Form widget for validation
+    return Form(
+      key: _loginFormKey,
+      child: Container(
+        padding: const EdgeInsets.all(24.0),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.95),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
             ),
-            style: const TextStyle(color: Colors.black87),
-          ),
-          const SizedBox(height: 24),
-          TextFormField(
-            controller: _passwordController,
-            obscureText: !_isPasswordVisible,
-            decoration: minimalistInputDecoration(
-              label: 'Password',
-              icon: Icons.lock_outline,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.indigo.shade400,
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _userIdController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: minimalistInputDecoration(
+                label: 'User ID / Email',
+                icon: Icons.person_outline,
+              ),
+              style: const TextStyle(color: Colors.black87),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email is required.';
+                }
+                // Simple email format check
+                if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                  return 'Please enter a valid email address.';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 24),
+            TextFormField(
+              controller: _passwordController,
+              obscureText: !_isPasswordVisible,
+              decoration: minimalistInputDecoration(
+                label: 'Password',
+                icon: Icons.lock_outline,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    color: Colors.indigo.shade400,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
                 ),
-                onPressed: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
+              ),
+              style: const TextStyle(color: Colors.black87),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Password is required.';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: _handleLogin,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4A00E0),
+                minimumSize: const Size(double.infinity, 56),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 5,
+              ),
+              child: const Text(
+                'LOG IN',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
-            style: const TextStyle(color: Colors.black87),
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton(
-            onPressed: _handleLogin,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4A00E0),
-              minimumSize: const Size(double.infinity, 56),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 5,
-            ),
-            child: const Text(
-              'LOG IN',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -262,13 +288,16 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  // GlobalKey for Form validation
+  final GlobalKey<FormState> _signUpFormKey = GlobalKey<FormState>();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
   void _handleEmailSignUp() {
-    if (_emailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty) {
+    // 1. Validate the form inputs
+    if (_signUpFormKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Sign Up successful! Navigating to main app...'),
@@ -281,8 +310,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       );
     } else {
+      // Validation failed, errors are shown by the TextFormField widgets
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter Email and Password.')),
+        const SnackBar(content: Text('Please correct the errors above.')),
       );
     }
   }
@@ -372,39 +402,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         style: TextStyle(color: Colors.black54),
                       ),
                       const SizedBox(height: 24),
-                      // --- Email/Password Fields ---
-                      TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: minimalistInputDecoration(
-                          label: 'Email Address',
-                          icon: Icons.email_outlined,
-                        ),
-                        style: const TextStyle(color: Colors.black87),
-                      ),
-                      const SizedBox(height: 24),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: !_isPasswordVisible,
-                        decoration: minimalistInputDecoration(
-                          label: 'Create Password',
-                          icon: Icons.lock_outline,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Colors.indigo.shade400,
+
+                      // Wrap email/password fields in a Form widget
+                      Form(
+                        key: _signUpFormKey,
+                        child: Column(
+                          children: [
+                            // --- Email Field with Validation ---
+                            TextFormField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: minimalistInputDecoration(
+                                label: 'Email Address',
+                                icon: Icons.email_outlined,
+                              ),
+                              style: const TextStyle(color: Colors.black87),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Email is required for sign up.';
+                                }
+                                // Robust email format check
+                                if (!RegExp(r'^[^@]+@[^@]+\.[^@]+$')
+                                    .hasMatch(value)) {
+                                  return 'Please enter a valid email address.';
+                                }
+                                return null;
+                              },
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _isPasswordVisible = !_isPasswordVisible;
-                              });
-                            },
-                          ),
+                            const SizedBox(height: 24),
+                            // --- Password Field with Validation ---
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: !_isPasswordVisible,
+                              decoration: minimalistInputDecoration(
+                                label: 'Create Password',
+                                icon: Icons.lock_outline,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.indigo.shade400,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible;
+                                    });
+                                  },
+                                ),
+                              ),
+                              style: const TextStyle(color: Colors.black87),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Password is required.';
+                                }
+                                if (value.length < 6) {
+                                  return 'Password must be at least 6 characters long.';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
                         ),
-                        style: const TextStyle(color: Colors.black87),
                       ),
+
                       const SizedBox(height: 32),
                       // Email Sign Up Button
                       ElevatedButton(
